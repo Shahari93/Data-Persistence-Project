@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.IO;
 
 public class MainManager : MonoBehaviour
 {
@@ -11,21 +11,28 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text highScoreText;
     public GameObject GameOverText;
-    
+
     private bool m_Started = false;
     private int m_Points;
-    
+    private static int highScorePoints;
+
     private bool m_GameOver = false;
 
-    
+
     // Start is called before the first frame update
     void Start()
     {
+        //if (m_Points > highScorePoints)
+        //{
+        //    highScorePoints = m_Points;
+        //}
+        highScoreText.text = "High Score: " + MenuManager.menuManager.playerName + " " + highScorePoints;
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
-        int[] pointCountArray = new [] {1,1,2,2,5,5};
+
+        int[] pointCountArray = new[] { 1, 1, 2, 2, 5, 5 };
         for (int i = 0; i < LineCount; ++i)
         {
             for (int x = 0; x < perLine; ++x)
@@ -42,10 +49,11 @@ public class MainManager : MonoBehaviour
     {
         if (!m_Started)
         {
+
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 m_Started = true;
-                float randomDirection = Random.Range(-1.0f, 1.0f);
+                float randomDirection = UnityEngine.Random.Range(-1.0f, 1.0f);
                 Vector3 forceDir = new Vector3(randomDirection, 1, 0);
                 forceDir.Normalize();
 
@@ -70,7 +78,27 @@ public class MainManager : MonoBehaviour
 
     public void GameOver()
     {
+        if (m_Points > highScorePoints)
+        {
+            highScorePoints = m_Points;
+            highScoreText.text = "High Score: " + MenuManager.menuManager.playerName + " " + m_Points;
+        }
+
         m_GameOver = true;
         GameOverText.SetActive(true);
+    }
+
+
+    [Serializable]
+    public class SaveHighScoreData
+    {
+        MenuManager menuManagerSave = new MenuManager();
+        int highScore;
+
+        public void SaveData()
+        {
+            highScore = highScorePoints;
+            string json = JsonUtility.ToJson(menuManagerSave);
+        }
     }
 }
