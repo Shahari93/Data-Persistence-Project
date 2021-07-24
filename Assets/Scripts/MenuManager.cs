@@ -11,7 +11,6 @@ public class MenuManager : MonoBehaviour
 {
     public static MenuManager menuManager;
     public InputField playerNameIF;
-    [SerializeField] Text highScoreText;
     public int highScore;
     public string playerName;
     public string highScoreName;
@@ -56,6 +55,7 @@ public class MenuManager : MonoBehaviour
     {
         public int highScore;
         public string highScorePlayer;
+        public string highScoreInMenu;
     }
 
     public void SaveData()
