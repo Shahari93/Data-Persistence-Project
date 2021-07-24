@@ -11,8 +11,10 @@ public class MenuManager : MonoBehaviour
 {
     public static MenuManager menuManager;
     public InputField playerNameIF;
+    [SerializeField] Text highScoreText;
+    public int highScore;
     public string playerName;
-
+    public string highScoreName;
 
     private void Awake()
     {
@@ -25,37 +27,55 @@ public class MenuManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+
     public void LoadNextScene(int sceneIndex)
     {
-        if (playerNameIF.text != null)
-        {
-            playerName = playerNameIF.text;
-            SceneManager.LoadScene(sceneIndex);
-        }
+        playerName = playerNameIF.text;
+        SceneManager.LoadScene(sceneIndex);
     }
 
     public void ExitGame()
     {
+        SaveData();
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
 #else
         Application.Quit();
 #endif
+    }
+
+
+    private void OnApplicationQuit()
+    {
         SaveData();
     }
 
     [Serializable]
-    public class SaveHighScoreData
+    public class SavePlayerData
     {
         public int highScore;
+        public string highScorePlayer;
     }
 
     public void SaveData()
     {
-        SaveHighScoreData saveHighScore = new SaveHighScoreData();
-        saveHighScore.highScore = MainManager.highScorePoints;
+        SavePlayerData savePlayerData = new SavePlayerData();
+        savePlayerData.highScore = highScore;
+        savePlayerData.highScorePlayer = highScoreName;
 
-        string json = JsonUtility.ToJson(saveHighScore);
-        File.WriteAllText(Application.persistentDataPath + "/saveDtat.json", json);
+        string json = JsonUtility.ToJson(savePlayerData);
+        File.WriteAllText(Application.persistentDataPath + "/saveData.json", json);
+    }
+
+    public void LoadData()
+    {
+        string path = Application.persistentDataPath + "/saveData.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SavePlayerData savePlayerData = JsonUtility.FromJson<SavePlayerData>(json);
+            highScore = savePlayerData.highScore;
+            highScoreName = savePlayerData.highScorePlayer;
+        }
     }
 }
