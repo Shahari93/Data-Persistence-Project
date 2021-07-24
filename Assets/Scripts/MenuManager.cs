@@ -25,6 +25,7 @@ public class MenuManager : MonoBehaviour
         }
         menuManager = this;
         DontDestroyOnLoad(gameObject);
+        LoadData();
     }
 
 

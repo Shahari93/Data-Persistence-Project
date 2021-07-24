@@ -25,11 +25,6 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (highScorePoints > 0)
-        {
-            highScoreText.text = "High Score: " + MenuManager.menuManager.playerName + " " + highScorePoints;
-        }
-        
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
 
@@ -48,7 +43,7 @@ public class MainManager : MonoBehaviour
 
     private void Update()
     {
-        highScoreText.text = $"High Score : {MenuManager.menuManager.playerName} : {MenuManager.menuManager.highScore}";
+        highScoreText.text = $"High Score : {MenuManager.menuManager.highScoreName} : {MenuManager.menuManager.highScore}";
         if (!m_Started)
         {
 
@@ -85,11 +80,12 @@ public class MainManager : MonoBehaviour
         if (m_Points >= highScorePoints)
         {
             highScorePoints = m_Points;
-            highScoreText.text = "High Score: " + MenuManager.menuManager.playerName + " " + m_Points;
+            highScoreText.text = "High Score: " + MenuManager.menuManager.highScoreName + " " + m_Points;
         }
 
         if (m_Points > MenuManager.menuManager.highScore)
         {
+            MenuManager.menuManager.highScoreName = MenuManager.menuManager.playerName;
             MenuManager.menuManager.highScore = m_Points;
 
             MenuManager.menuManager.SaveData();
