@@ -2,10 +2,11 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.IO;
+
 
 public class MainManager : MonoBehaviour
 {
+    public static MainManager mainManager;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
@@ -16,10 +17,9 @@ public class MainManager : MonoBehaviour
 
     private bool m_Started = false;
     private int m_Points;
-    private static int highScorePoints;
+    public static int highScorePoints;
 
     private bool m_GameOver = false;
-
 
     // Start is called before the first frame update
     void Start()
@@ -84,21 +84,8 @@ public class MainManager : MonoBehaviour
             highScoreText.text = "High Score: " + MenuManager.menuManager.playerName + " " + m_Points;
         }
 
+        MenuManager.menuManager.SaveData();
         m_GameOver = true;
         GameOverText.SetActive(true);
-    }
-
-
-    [Serializable]
-    public class SaveHighScoreData
-    {
-        MenuManager menuManagerSave = new MenuManager();
-        int highScore;
-
-        public void SaveData()
-        {
-            highScore = highScorePoints;
-            string json = JsonUtility.ToJson(menuManagerSave);
-        }
     }
 }
